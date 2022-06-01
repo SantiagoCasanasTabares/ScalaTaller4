@@ -26,7 +26,7 @@ object Anagrama {
    * @return ocurrencias -> lista( lista(caracter, veces que se repite))
    */
   def lOcFra(frase: Frase):Ocurrencias = {
-    lOcPal(frase.flatten)
+    lOcPal(frase reduceLeft((x,y)=>x+y))
   }
 
   /**
@@ -36,6 +36,12 @@ object Anagrama {
     diccionario.groupBy((pal:Palabra)=>lOcPal(pal).sorted)
   }
 
+
+  /**
+   * Funcin que recibe una palabra y busca en el diccionario las palabras que tienes sus mismas ocurrencias
+   * @param palabra
+   * @return
+   */
   def anagramasDePalabras(palabra: Palabra): List[Palabra] = {
 
     def anagramAux(ocurrencias: Ocurrencias): List[Palabra] = {
@@ -46,8 +52,34 @@ object Anagrama {
       ocurrenciaPal.flatten
     }.toList
 
-    anagramAux(lOcPal(palabra))
+    anagramAux(lOcPal(palabra).sorted)
 
   }
+
+  /**
+   * Funcion que devuuelve todas las posibles combinaciones de una lista de ocurrencias
+   * @param lOcurrencias
+   * @return
+   */
+  def combinaciones(lOcurencias: Ocurrencias): List[Ocurrencias] = lOcurencias match {
+    case Nil => List(List())
+    case y::ys =>
+      val combinacionesAux = combinaciones(ys)
+      combinacionesAux++
+        (for {
+        i <- combinacionesAux
+        j <- 1 to y._2
+      } yield (y._1, j)::i)
+  }
+
+  def complemento(lOcurrencias: Ocurrencias, slOcurrencias: Ocurrencias):Ocurrencias = slOcurrencias match {
+    case Nil => lOcurrencias
+    case y::ys =>
+      if (y._1 == lOcurrencias.head._1) {
+        if (y._2 == lOcurrencias.head._2) complemento(lOcurrencias.tail, ys)
+        else List(y._1, lOcurrencias.head._2-y._2) :: complemento(lOcurrencias.tail, ys)
+      } else lOcurrencias.head :: complemento(lOcurrencias.tail, ys)
+  }
+
 
 }

@@ -9,9 +9,9 @@ agrupadas.values
 val agrupalist = agrupadas.toList
 //agrupalist map()
 
-val paraguas = lOcPal("paraguas")
+
 val umbrella = lOcPal("paraguas")
-paraguas.equals(umbrella)
+
 
 val pal1 = "probemos"
 val pal2 = "con"
@@ -37,5 +37,9 @@ val cy = diccionarioPorOcurrencias
 for {
   n <- cy
 } yield n._2
+
+combinaciones(lOcPal("cy"))
+complemento(lOcPal("ccao"), lOcPal("yo"))
+
 
 anagramasDePalabras("moco")
