@@ -61,15 +61,21 @@ object Anagrama {
    * @param lOcurrencias
    * @return
    */
-  def combinaciones(lOcurencias: Ocurrencias): List[Ocurrencias] = lOcurencias match {
-    case Nil => List(List())
-    case y::ys =>
-      val combinacionesAux = combinaciones(ys)
-      combinacionesAux++
-        (for {
-        i <- combinacionesAux
-        j <- 1 to y._2
-      } yield (y._1, j)::i)
+  def combinaciones(lOcurrencias: Ocurrencias):List[Ocurrencias]={
+    val comb = (for {
+      n <- lOcurrencias
+      f <- lOcurrencias
+      j <- 1 to n._2
+      i <- 1 to f._2
+      if n._1 !=  f._1
+    }yield (List():+(n._1,j):+(f._1,i)).sorted).distinct
+
+    val comb2 = (for{
+      x<-lOcurrencias
+      i<- 1 to x._2
+    }yield List():+(x._1,i))
+
+    List.concat(comb,comb2):+List()
   }
 
   def complemento(lOcurrencias: Ocurrencias, slOcurrencias: Ocurrencias):Ocurrencias = slOcurrencias match {
@@ -77,7 +83,7 @@ object Anagrama {
     case y::ys =>
       if (y._1 == lOcurrencias.head._1) {
         if (y._2 == lOcurrencias.head._2) complemento(lOcurrencias.tail, ys)
-        else List(y._1, lOcurrencias.head._2-y._2) :: complemento(lOcurrencias.tail, ys)
+        else (y._1, lOcurrencias.head._2-y._2) :: complemento(lOcurrencias.tail, ys)
       } else lOcurrencias.head :: complemento(lOcurrencias.tail, ys)
   }
 

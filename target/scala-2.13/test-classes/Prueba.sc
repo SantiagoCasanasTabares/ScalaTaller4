@@ -1,13 +1,10 @@
 import Anagrama._
 
-import scala.collection.immutable.Nil.map
-
 val palabra = "paraguas"
 val palabraLista = palabra.toList
 val agrupadas = palabraLista.groupBy(_.charValue())
 agrupadas.values
 val agrupalist = agrupadas.toList
-//agrupalist map()
 
 
 val umbrella = lOcPal("paraguas")
@@ -39,7 +36,9 @@ for {
 } yield n._2
 
 combinaciones(lOcPal("cy"))
-complemento(lOcPal("ccao"), lOcPal("yo"))
+complemento(lOcPal("ccao"), lOcPal("c"))
+
+
 
 
 anagramasDePalabras("moco")

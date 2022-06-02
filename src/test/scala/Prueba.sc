@@ -36,7 +36,9 @@ for {
 } yield n._2
 
 combinaciones(lOcPal("cy"))
-complemento(lOcPal("ccao"), lOcPal("yo"))
+complemento(lOcPal("ccao"), lOcPal("c"))
+
+
 
 
 anagramasDePalabras("moco")
