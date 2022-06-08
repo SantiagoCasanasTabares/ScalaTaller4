@@ -15,7 +15,7 @@ object Anagrama {
   def lOcPal(palabra: Palabra):Ocurrencias = {
     val ocurrenciasPal = (for {
       n <- palabra
-   }yield (n, palabra.count((x) => x==n))).toList
+   }yield (n, palabra.count(x => x==n))).toList
 
     ocurrenciasPal.distinct
   }
@@ -26,7 +26,8 @@ object Anagrama {
    * @return ocurrencias -> lista( lista(caracter, veces que se repite))
    */
   def lOcFra(frase: Frase):Ocurrencias = {
-    lOcPal(frase reduceLeft((x,y)=>x+y))
+    val concatFrase = frase reduceLeft ((x,y)=>x+y)
+    lOcPal(concatFrase).filter(_._1 !=' ')
   }
 
   /**
@@ -47,7 +48,7 @@ object Anagrama {
     def anagramAux(ocurrencias: Ocurrencias): List[Palabra] = {
     val ocurrenciaPal = (for {
       n <- diccionarioPorOcurrencias
-      if (n._1==ocurrencias)
+      if n._1==ocurrencias
     } yield n._2)
       ocurrenciaPal.flatten
     }.toList
@@ -61,30 +62,55 @@ object Anagrama {
    * @param lOcurrencias
    * @return
    */
-  def combinaciones(lOcurrencias: Ocurrencias):List[Ocurrencias]={
-    val comb = (for {
-      n <- lOcurrencias
-      f <- lOcurrencias
-      j <- 1 to n._2
-      i <- 1 to f._2
-      if n._1 !=  f._1
-    }yield (List():+(n._1,j):+(f._1,i)).sorted).distinct
-
-    val comb2 = (for{
-      x<-lOcurrencias
-      i<- 1 to x._2
-    }yield List():+(x._1,i))
-
-    List.concat(comb,comb2):+List()
+  def combinaciones(lOcurrencias: Ocurrencias):List[Ocurrencias]= lOcurrencias match {
+    case Nil => List(List())
+    case y::ys =>{
+      val combinacion = combinaciones(ys)
+      combinacion++
+        (for {
+          n<- combinacion
+          i<- 1 to y._2
+        }yield (y._1,i)::n)
+    }
   }
 
-  def complemento(lOcurrencias: Ocurrencias, slOcurrencias: Ocurrencias):Ocurrencias = slOcurrencias match {
-    case Nil => lOcurrencias
-    case y::ys =>
-      if (y._1 == lOcurrencias.head._1) {
-        if (y._2 == lOcurrencias.head._2) complemento(lOcurrencias.tail, ys)
-        else (y._1, lOcurrencias.head._2-y._2) :: complemento(lOcurrencias.tail, ys)
-      } else lOcurrencias.head :: complemento(lOcurrencias.tail, ys)
+  /**
+   * Funcion que recibe una lista de ocurrencias y un subconjunto de esa lista, y devuelve el complemento
+   * de este conjunto para completar la lista.
+   * @param lOcurrencias
+   * @param slOcurrencias
+   * @return slOcurrencias'
+   */
+  def complemento(lOc: Ocurrencias, slOc: Ocurrencias): Ocurrencias ={
+    val lista1 = lOc.sorted
+    val lista2 = slOc.sorted
+
+    if(lista2.isEmpty) lista1
+    else{
+      if(lista2.head._1 == lista1.head._1){
+        if(lista2.head._2==lista1.head._2) complemento(lista1.tail,lista2.tail)
+        else (lista2.head._1,lista1.head._2-lista2.head._2)::complemento(lista1.tail,lista2.tail)
+      }else lista1.head::complemento(lista1.tail,lista2)
+    }
+  }
+
+  /**
+   * Funcion final que sirve para que dada una frase, que viene siendo una lista de palabras, devuelva
+   * todas las posibles frase que se puedan hacer con esta, usando solamente las palabras del diccionario.
+   * @param frase
+   * @return List[frase]
+   */
+  def anagramaFrase(frase: Frase): List[Frase] = {
+    def anaFraAux(ocurrencias: Ocurrencias): List[Frase] = {
+      if (ocurrencias.isEmpty) List(Nil)
+      else for {
+        combinacion <- combinaciones(ocurrencias)
+        palabra <- diccionarioPorOcurrencias getOrElse(combinacion, Nil)
+        frase <- anaFraAux(complemento(ocurrencias, lOcPal(palabra)))
+        if !combinacion.isEmpty
+      }yield palabra::frase
+    }
+    anaFraAux(lOcFra(frase))
   }
 
 

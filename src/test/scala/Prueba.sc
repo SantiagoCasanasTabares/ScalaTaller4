@@ -1,44 +1,62 @@
 import Anagrama._
 
-val palabra = "paraguas"
-val palabraLista = palabra.toList
-val agrupadas = palabraLista.groupBy(_.charValue())
-agrupadas.values
-val agrupalist = agrupadas.toList
-
-
-val umbrella = lOcPal("paraguas")
-
-
-val pal1 = "probemos"
-val pal2 = "con"
-val pal3 = "esta"
-val pal4 = "frase"
-
-val frase = List(pal1, pal2, pal3, pal4)
-val palabrasListas = frase map((ls:Palabra)=>ls.toList)
-val ocurrenciasFrase = palabrasListas.flatten
-
-val probemosConEstaFrase = lOcFra(frase)
-
 val diccionario = diccionarioPorOcurrencias
 
-
-val pal5 = "probemos"
-val pal6 = "con"
-val pal7 = "con"
-val pal8 = "frase"
-val frase2 = List(List('a', 'a', 'a'), List('a', 'b', 'a'), List('a', 'a', 'a'), List('a', 'c', 'a'))
-
-val cy = diccionarioPorOcurrencias
-for {
-  n <- cy
-} yield n._2
-
-combinaciones(lOcPal("cy"))
-complemento(lOcPal("ccao"), lOcPal("c"))
-
-
-
-
-anagramasDePalabras("moco")
+println("Creando palabras: ")
+val pal1 = "cosas"
+val pal2 = "yo"
+val pal3 = "como"
+val pal4 = "cayo"
+val pal5 = "mocosos"
+println("----------------------------------------------------------")
+println("Creando frases: ")
+val frase1 = List(pal1, pal2, pal3, pal4, pal5)
+val frase2 = List(pal1)
+val frase3 = List(pal1, pal2)
+val frase4 = List(pal1, pal2, pal3)
+val frase5 = List(pal1, pal2, pal3, pal4)
+println("----------------------------------------------------------")
+println("Prueba locPal: ")
+lOcPal(pal1)
+lOcPal(pal2)
+lOcPal(pal3)
+lOcPal(pal4)
+lOcPal(pal5)
+println("----------------------------------------------------------")
+println("Prueba locFrase: ")
+lOcFra(frase1)
+lOcFra(frase2)
+lOcFra(frase3)
+lOcFra(frase4)
+lOcFra(frase5)
+println("----------------------------------------------------------")
+println("Prueba de que el diccionario por ocurrencias se crea correctamente: ")
+diccionarioPorOcurrencias
+println("----------------------------------------------------------")
+println("Creando anagramas de palabra: ")
+anagramasDePalabras(pal1)
+anagramasDePalabras(pal2)
+anagramasDePalabras(pal3)
+anagramasDePalabras(pal4)
+anagramasDePalabras(pal5)
+println("----------------------------------------------------------")
+println("Posibles combinaciones de una lista de ocurrencias: ")
+combinaciones(lOcPal(pal1))
+combinaciones(lOcFra(frase2))
+combinaciones(lOcFra(frase1))
+combinaciones(lOcPal(pal5))
+combinaciones(lOcFra(frase5))
+println("----------------------------------------------------------")
+println("Funcion complemento: ")
+complemento(lOcPal(pal1), lOcPal("sos"))
+complemento(lOcPal(pal1), lOcPal(pal1))
+complemento(lOcPal(pal4), List())
+complemento(lOcFra(frase4), lOcFra(frase3))
+complemento(lOcPal(pal5), lOcPal(pal3))
+println("----------------------------------------------------------")
+println("Anagramas de frase: ")
+anagramaFrase(frase1)
+anagramaFrase(frase2)
+anagramaFrase(frase3)
+anagramaFrase(frase4)
+anagramaFrase(frase5)
